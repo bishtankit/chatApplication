@@ -1,6 +1,8 @@
 const express = require("express");
 const { Server } = require("socket.io");
 const { createServer } = require("http");
+require('dotenv').config()
+const port = process.env.PORT || 5000;
 
 const app = express();
 
@@ -115,6 +117,6 @@ socket.on("updateUser", (data, callback)=>{
 });
 
 
-server.listen(5000, function(){
-    console.log("server started on port 5000");
+server.listen(port, function(){
+    console.log(`server started on port ${port}`);
 })
