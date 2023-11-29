@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="#" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+        <div style="text-align: center;">
+            <h1>CREATE OR JOIN A ROOM</h1>
+            <input type="text" placeholder="roomID" style="height: 2em;" id="roomID">
+            <input type="text" placeholder="Your Name" style="height: 2em;" id="userName"> <br>
+            <button style="margin-top: 1em; height: 2em;" onclick="joinRoom()">Join Room</button>
+        </div>
+    
+</body>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+var socket = io();
+
+function joinRoom(){
+    const userName = document.getElementById("userName").value;
+    const roomID = document.getElementById("roomID").value;
+    socket.emit("joinRoom", {userName, roomID, chatID: ''})
+}
+
+socket.on("redirect-to-room", (data)=>{
+    localStorage.setItem("chatID", data.chatID);
+    window.location.href = `/room/${data.roomID}`
+})
+
+</script>
+</html>

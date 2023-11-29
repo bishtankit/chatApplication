@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="#" />
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div style="text-align: center;">
+        <h1> Welcome to the Chat Room!  <button style="height: 2em" onclick="changeRoom()">Change room</button></h1>
+    </div>
+    
+        <div style=" background-color: #A9D9D0; overflow-y: scroll; height:30em; width: 70%; margin-left: auto; margin-right: auto; padding: 1em;">
+          <ul id="messageBox" style="list-style-type: none;">
+    
+          </ul>
+        </div>  
+
+        <div style="width: 70%; margin-left: auto; margin-right: auto; margin-top: 2em; text-align: center;">
+            <input type="text" id="message" placeholder="type your message here" style="height: 1rem; width: 40%; border-radius: 1.5em; padding: 1em; font-size: 1.1rem;"/>
+        </div>
+    
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+
+var socket = io();
+
+var message = document.getElementById("message");
+
+message.addEventListener("keydown", function (e) {
+    if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
+        newMessage();
+    }
+});
+
+function newMessage(){
+    const message = document.getElementById("message").value;
+    document.getElementById("message").value = "";
+    socket.emit("new-message", {message, chatID: localStorage.getItem("chatID"), userName: localStorage.getItem("userName")})
+}
+
+socket.on("broadcast-message", (data)=>{
+
+ const messageBox = document.getElementById("messageBox");
+ const li = document.createElement("li");
+
+ if(data.chatID == localStorage.getItem("chatID")){
+    li.style.marginLeft = '70%';
+    li.innerHTML = `You: ${data.message}`
+ }else{
+    li.innerHTML = `${data.userName}: ${data.message}`;
+ }
+ li.style.fontSize = '1.5rem';
+ li.style.paddingBottom = '0.5em';
+ 
+
+  messageBox.appendChild(li);
+
+})
+
+socket.emit("updateUser", {chatID: localStorage.getItem("chatID")}, (response)=>{
+    localStorage.setItem("chatID", response.chatID);
+    localStorage.setItem("userName", response.userName);
+});
+
+socket.on("user-joined", (data)=>{
+
+ const messageBox = document.getElementById("messageBox");
+ const li = document.createElement("li");
+ li.innerHTML = `${data.userName} joined the room`
+ li.style.marginLeft = '40%';
+ li.style.color = "grey";
+
+ messageBox.appendChild(li);
+})
+
+socket.on("user-left", (userName)=>{
+
+ const messageBox = document.getElementById("messageBox");
+ const li = document.createElement("li");
+ li.innerHTML = `${userName} left the room`
+ li.style.marginLeft = '40%';
+ li.style.color = "grey";
+
+ messageBox.appendChild(li);
+})
+
+function changeRoom(){
+    window.location.href = `/`
+}
+
+</script>
+</html>
