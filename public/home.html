@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>chatApp</title>
 </head>
 <body>
 
@@ -15,10 +15,14 @@
             <input type="text" placeholder="Your Name" style="height: 2em;" id="userName"> <br>
             <button style="margin-top: 1em; height: 2em;" onclick="joinRoom()">Join Room</button>
         </div>
+
+        <div>
+            <button onclick="TogetherJS(this); return false;" data-end-togetherjs-html="End TogetherJS">Start TogetherJS</button>
+        </div>
     
 </body>
 
-
+<script src="https://togetherjs.com/togetherjs-min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
 
@@ -34,6 +38,8 @@ socket.on("redirect-to-room", (data)=>{
     localStorage.setItem("chatID", data.chatID);
     window.location.href = `/room/${data.roomID}`
 })
+
+var TogetherJSConfig_chatApp = "foo";
 
 </script>
 </html>

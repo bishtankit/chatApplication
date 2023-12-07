@@ -25,6 +25,7 @@ app.get('/room/:roomID', (req, res) => {
 
 
 const users = [];
+// const rooms = [];
 
 io.on('connection', (socket) => {
 
@@ -34,6 +35,19 @@ io.on('connection', (socket) => {
     try {
         users.push({userName: data.userName, id: socket.id, roomID: data.roomID, dummy: true})
         data.chatID = socket.id;
+    // const foundRoom = rooms.find((room)=>{
+    //          return room.roomID == data.roomID;
+    //     });
+
+        // if( foundRoom ){
+        //    console.log("room found", foundRoom);
+        // }else{
+        //     console.log("room not found");
+        //     rooms.push({
+        //         roomID: data.roomID,
+        //         userName: userName.push(data.userName)
+        //     })
+        // }
         socket.emit('redirect-to-room', data);
     } catch (error) {
         console.log(error)
