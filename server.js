@@ -2,6 +2,7 @@ const express = require("express");
 const { Server } = require("socket.io");
 const { createServer } = require("http");
 require('dotenv').config()
+const fetch = require("node-fetch");
 const port = process.env.PORT || 5000;
 
 const app = express();
@@ -22,6 +23,55 @@ res.sendFile(path.join(__dirname, 'public/home.html'))
 app.get('/room/:roomID', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/room.html'))
     });
+
+app.get(`/agent`, async (req, res)=>{
+
+    const id = req. query.visitorid;
+
+    const response = await fetch(`https://api.upscope.io/v1.3/visitors/${id}/watch_url`, {
+        method: 'post',
+        body:    JSON.stringify(
+            {
+                "branding": {
+                  "naked": true,
+                },
+                "permissions": {},
+                "agent": {
+                  "id": "123",
+                  "name": "Joe Smith"
+                },
+                "metadata": {},
+                "webhook_url": "https://example.com"
+              }
+        ),
+        headers: { 'Content-Type': 'application/json', 'X-Api-Key': 'BzBQwTHvMDtNLzyUtAZtDGXpCkGSHhprnTmJmesCcdSuhcU8AV' },
+    });
+
+    const data = await response.json();
+    console.log("data >>", data)
+
+})
+
+app.get('/visitor', async (req,res)=>{
+
+    const response = await fetch('https://api.upscope.io/v1.3/proxy_sessions', {
+        method: 'post',
+        body:    JSON.stringify({
+            "initial_url": "/",
+            "allowed_domains": ["/"],
+            "branding": {
+              "retry_url": null
+            },
+        }),
+        headers: { 'Content-Type': 'application/json', 'X-Api-Key': 'BzBQwTHvMDtNLzyUtAZtDGXpCkGSHhprnTmJmesCcdSuhcU8AV' },
+    });
+
+    const data = await response.json();
+    console.log("data >>", data)
+
+    res.send(data)
+
+})
 
 
 const users = [];

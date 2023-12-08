@@ -5,7 +5,38 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>chatApp</title>
+
+    <script>
+        // This will initiate Upscope connection. It's important it is added to all pages,
+        // even when the  user is not logged in.
+      
+        // You can place this in the head or the body of the page.
+      
+        (function(w, u, d){var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};
+        var l = function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;
+        s.src='https://code.upscope.io/bSM5mRHT5d.js';
+        var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};
+        if(typeof u!=="function"){w.Upscope=i;l();}})(window, window.Upscope, document);
+      
+        Upscope('init');
+      </script>
+      
+      <script>
+        // If the  user is logged in, optionally identify them with the following method.
+        // You can call Upscope('updateConnection', {}); at any time.
+      
+        Upscope('updateConnection', {
+          // Set the  user ID below. If you don't have one, set to undefined.
+          uniqueId: "USER UNIQUE ID",
+      
+          // Set the  user name or email below (e.g. ["John Smith", "john.smith@acme.com"]).
+          identities: ["list", "of", "identities", "here"]
+        });
+      </script>
+
+
 </head>
 <body>
 
@@ -13,15 +44,12 @@
             <h1>CREATE OR JOIN A ROOM</h1>
             <input type="text" placeholder="roomID" style="height: 2em;" id="roomID">
             <input type="text" placeholder="Your Name" style="height: 2em;" id="userName"> <br>
-            <button style="margin-top: 1em; height: 2em;" onclick="joinRoom()">Join Room</button>
+            <button style="margin-top: 1em;" onclick="joinRoom()" class="btn btn-primary btn-md">Join Room</button>
         </div>
-
+<!-- 
         <div>
-            <button onclick="TogetherJS(this); return false;" data-end-togetherjs-html="End TogetherJS">Start TogetherJS</button>
-        </div>
-    
-        <script src="https://togetherjs.com/togetherjs-min.js"></script>
-        
+            <button onclick="startSession()"> start session </button>
+        </div> -->
 </body>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -40,7 +68,20 @@ socket.on("redirect-to-room", (data)=>{
     window.location.href = `/room/${data.roomID}`
 })
 
-var TogetherJSConfig_chatApp = "foo";
+
+// const upscopeID = '77';
+
+// Upscope('getShortId', console.log)
+
+const id = Upscope('getShortId', console.log)
+
+console.warn("id>>", id)
+
+// async function startSession(){
+//     const data = await fetch("localhost:5000/agent?visitorid=77");
+//     console.warn(data)
+// }
+
 
 </script>
 </html>
