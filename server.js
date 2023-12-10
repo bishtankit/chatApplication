@@ -27,6 +27,7 @@ app.get('/room/:roomID', (req, res) => {
 app.get(`/agent`, async (req, res)=>{
 
     const id = req. query.visitorid;
+    console.warn(">>>>>>>>", id)
 
     const response = await fetch(`https://api.upscope.io/v1.3/visitors/${id}/watch_url`, {
         method: 'post',
@@ -49,6 +50,8 @@ app.get(`/agent`, async (req, res)=>{
 
     const data = await response.json();
     console.log("data >>", data)
+
+    res.json(data);
 
 })
 

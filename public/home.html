@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>chatApp</title>
 
@@ -45,11 +46,22 @@
             <input type="text" placeholder="roomID" style="height: 2em;" id="roomID">
             <input type="text" placeholder="Your Name" style="height: 2em;" id="userName"> <br>
             <button style="margin-top: 1em;" onclick="joinRoom()" class="btn btn-primary btn-md">Join Room</button>
+
+
+
+            <div class="mt-4">
+                <button onclick="startSession()" class="btn btn-success" id="ss-button"> start session </button>
+            </div>
+
+            <div class="mt-4 d-none" id="link-div">
+               <p>Share this session link to our visitor</p>
+               <input type="text" id="session-link" style="display: inline"></input>
+               <i class="fa fa-copy" style="margin-left: 1em;" onclick="copyText()"></i>
+            </div>
+
+
         </div>
-<!-- 
-        <div>
-            <button onclick="startSession()"> start session </button>
-        </div> -->
+
 </body>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -68,19 +80,37 @@ socket.on("redirect-to-room", (data)=>{
     window.location.href = `/room/${data.roomID}`
 })
 
-
-// const upscopeID = '77';
-
 // Upscope('getShortId', console.log)
 
-const id = Upscope('getShortId', console.log)
+async function startSession(){
 
-console.warn("id>>", id)
+    document.getElementById("ss-button").setAttribute('disabled','disabled')
 
-// async function startSession(){
-//     const data = await fetch("localhost:5000/agent?visitorid=77");
-//     console.warn(data)
-// }
+    Upscope('getShortId', function(value) {
+    upscoreID = value;
+    });
+
+    const response = await fetch(`/agent?visitorid=${upscoreID}`);
+    const data = await response.json();
+    console.warn(data)
+     
+     document.getElementById("link-div").classList.remove("d-none")
+     document.getElementById("ss-button").removeAttribute('disabled')
+
+    const link = document.getElementById("session-link");
+    link.value = data.watch_url
+
+}
+
+
+
+function copyText() {
+  var text = document.getElementById("session-link");
+  text.select();
+  text.setSelectionRange(0, 99999); 
+  navigator.clipboard.writeText(text.value);
+
+}
 
 
 </script>
