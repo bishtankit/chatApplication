@@ -55,8 +55,7 @@
 
             <div class="mt-4 d-none" id="link-div">
                <p>Share this session link to our visitor</p>
-               <input type="text" id="session-link" style="display: inline"></input>
-               <i class="fa fa-copy" style="margin-left: 1em;" onclick="copyText()"></i>
+               <a href type="text" id="session-link" style="display: inline"></a>
             </div>
 
 
@@ -98,19 +97,11 @@ async function startSession(){
      document.getElementById("ss-button").removeAttribute('disabled')
 
     const link = document.getElementById("session-link");
-    link.value = data.watch_url
+    link.setAttribute('href',data.watch_url)
+    link.innerHTML = data.watch_url
 
 }
 
-
-
-function copyText() {
-  var text = document.getElementById("session-link");
-  text.select();
-  text.setSelectionRange(0, 99999); 
-  navigator.clipboard.writeText(text.value);
-
-}
 
 
 </script>
